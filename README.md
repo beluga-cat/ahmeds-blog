@@ -4,12 +4,12 @@ A tech blog built with Astro featuring guides on backups, virtualization, cloud,
 
 ## Features
 
-- 🌑 Dark mode with orange accents
-- 📝 Markdown-based blog posts with frontmatter
-- 🏷️ 9 categories: Backups, Virtualization, Cloud, Monitoring, Networking, Security, Automation, Windows Server, Linux
-- 🚀 Static site generation (fast, SEO-friendly)
-- 📱 Fully responsive design
-- 🔍 Category filtering
+- Dark mode with orange accents
+- Markdown-based blog posts with frontmatter
+- 9 categories: Backups, Virtualization, Cloud, Monitoring, Networking, Security, Automation, Windows Server, Linux
+- Static site generation (fast, SEO-friendly)
+- Fully responsive design
+- Category filtering
 
 ## Tech Stack
 
@@ -161,4 +161,4 @@ MIT
 
 ## Author
 
-Ahmed - [Your contact info]
+Ahmed - ahmedamin1024@gmail.com
