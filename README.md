@@ -155,10 +155,6 @@ export default defineConfig({
 
 Edit the schema in `src/content/config.ts` and update the dropdown in `src/components/Header.astro`.
 
-## License
-
-MIT
-
 ## Author
 
 Ahmed - ahmedamin1024@gmail.com
