@@ -1,0 +1,55 @@
+<footer class="footer">
+  <div class="container">
+    <div class="socials">
+      <a href="mailto:ahmedamin1024@gmail.com" class="social-link" aria-label="Email">
+        <img src="/email.png" alt="Email" />
+      </a>
+      <a href="https://www.linkedin.com/in/ahmedamin1024/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+        <img src="/linkedin.png" alt="LinkedIn" />
+      </a>
+    </div>
+    <p class="copyright">&copy; Copyright {new Date().getFullYear()} Ahmed Amin | All Rights Reserved</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+    text-align: center;
+    margin-top: 4rem;
+  }
+
+  .socials {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .social-link {
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+
+  .social-link:hover {
+    transform: translateY(-3px);
+  }
+
+  .social-link img {
+    width: 32px;
+    height: 32px;
+    filter: grayscale(100%) brightness(0.8);
+    transition: filter 0.2s;
+  }
+
+  .social-link:hover img {
+    filter: grayscale(0%) brightness(1);
+  }
+
+  .copyright {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+</style>

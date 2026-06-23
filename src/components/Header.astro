@@ -1,0 +1,183 @@
+<header class="header">
+  <nav class="nav container">
+    <a href="/" class="logo">
+      <div class="logo-content">
+        <span class="logo-text">Ahmed's Blog</span>
+        <span class="logo-subtext">Wired for Curiosity</span>
+      </div>
+    </a>
+    
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        
+        <div class="dropdown">
+          <button class="dropdown-toggle">
+            Categories
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M3 5L6 8L9 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu">
+            <a href="/categories/backups">Backups</a>
+            <a href="/categories/virtualization">Virtualization</a>
+            <a href="/categories/cloud">Cloud</a>
+            <a href="/categories/monitoring">Monitoring</a>
+            <a href="/categories/networking">Networking</a>
+            <a href="/categories/security">Security</a>
+            <a href="/categories/automation">Automation</a>
+            <a href="/categories/windows-server">Windows Server</a>
+            <a href="/categories/linux">Linux</a>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <button class="dropdown-toggle">
+            Certifications
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M3 5L6 8L9 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu">
+            <a href="https://google.com" target="_blank" rel="noopener noreferrer">AZ-104: Azure Administrator</a>
+            <a href="https://google.com" target="_blank" rel="noopener noreferrer">VCP-VCF: VMware Cloud Foundation</a>
+            <a href="https://google.com" target="_blank" rel="noopener noreferrer">AZ-700: Azure Network Engineer</a>
+            <a href="https://google.com" target="_blank" rel="noopener noreferrer">VMCE: Veeam Certified Engineer</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .header {
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-content {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    gap: 0.25rem;
+  }
+
+  .logo-text {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  .logo-subtext {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .logo:hover {
+    color: var(--accent);
+  }
+
+  .logo:hover .logo-subtext {
+    color: var(--accent-hover);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .nav-links > a {
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: color 0.2s;
+  }
+
+  .nav-links > a:hover {
+    color: var(--accent);
+  }
+
+  .dropdown {
+    position: relative;
+  }
+
+  .dropdown-toggle {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+  }
+
+  .dropdown-toggle:hover {
+    color: var(--accent);
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    min-width: 200px;
+    margin-top: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-menu a {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+  }
+
+  .dropdown-menu a:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--accent);
+  }
+
+</style>

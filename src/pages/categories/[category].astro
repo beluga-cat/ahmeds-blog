@@ -1,0 +1,105 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+
+export async function getStaticPaths() {
+  const categories = [
+    { name: 'Backups', slug: 'backups' },
+    { name: 'Virtualization', slug: 'virtualization' },
+    { name: 'Cloud', slug: 'cloud' },
+    { name: 'Monitoring', slug: 'monitoring' },
+    { name: 'Networking', slug: 'networking' },
+    { name: 'Security', slug: 'security' },
+    { name: 'Automation', slug: 'automation' },
+    { name: 'Windows Server', slug: 'windows-server' },
+    { name: 'Linux', slug: 'linux' }
+  ];
+  
+  const allPosts = await getCollection('blog');
+  
+  return categories.map((category) => {
+    const filteredPosts = allPosts
+      .filter((post) => post.data.category.toLowerCase().replace(/\s+/g, '-') === category.slug)
+      .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+    
+    return {
+      params: { category: category.slug },
+      props: { category, posts: filteredPosts },
+    };
+  });
+}
+
+const { category, posts } = Astro.props;
+---
+
+<BaseLayout title={category.name} description={`${category.name} guides and tutorials`}>
+  <div class="container">
+    <section class="category-header">
+      <h1>{category.name}</h1>
+      <p>{posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category</p>
+    </section>
+
+    <section class="posts">
+      {posts.length > 0 ? (
+        <div class="posts-grid">
+          {posts.map((post) => (
+            <BlogCard
+              title={post.data.title}
+              pubDate={post.data.pubDate}
+              description={post.data.description}
+              category={post.data.category}
+              slug={post.slug}
+            />
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <p>No posts in this category yet. Check back soon!</p>
+        </div>
+      )}
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .category-header {
+    text-align: center;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .category-header h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .category-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 0;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 768px) {
+    .category-header h1 {
+      font-size: 2rem;
+    }
+
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

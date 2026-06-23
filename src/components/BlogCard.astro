@@ -1,0 +1,122 @@
+---
+const { title, pubDate, description, category, slug } = Astro.props;
+
+const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<a href={`/blog/${slug}`} class="blog-card">
+  <article>
+    <div class="category-badge">{category}</div>
+    <h3 class="title">{title}</h3>
+    <p class="description">{description}</p>
+    <div class="meta">
+      <div class="author">
+        <img src="/avatar.png" alt="Ahmed Amin" class="author-avatar" />
+        <span class="author-name">Ahmed</span>
+      </div>
+      <time datetime={pubDate}>
+        <svg class="clock-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        {formattedDate}
+      </time>
+    </div>
+    <span class="read-more">Read more →</span>
+  </article>
+</a>
+
+<style>
+  .blog-card {
+    display: block;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 24px rgba(255, 107, 53, 0.15);
+  }
+
+  .category-badge {
+    display: inline-block;
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .description {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .author-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .author-name {
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  time {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .clock-icon {
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+
+  .read-more {
+    display: block;
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 0.875rem;
+    margin-top: 0.75rem;
+    text-align: right;
+  }
+</style>

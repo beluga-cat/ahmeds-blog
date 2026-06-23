@@ -1,0 +1,115 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const { title, description, pubDate, category, author, formattedDate } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content={description}>
+  <title>{title} | Ahmed's Blog</title>
+  <link rel="stylesheet" href="/global.css">
+</head>
+<body>
+  <Header />
+  <main class="container">
+    <article class="post">
+      <header class="post-header">
+        <div class="category-badge">{category}</div>
+        <h1>{title}</h1>
+        <div class="post-meta">
+          <time datetime={pubDate}>
+            <svg class="clock-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            {formattedDate}
+          </time>
+          <span>•</span>
+          <span>By {author}</span>
+        </div>
+      </header>
+      
+      <div class="post-content">
+        <slot />
+      </div>
+    </article>
+  </main>
+  <Footer />
+</body>
+</html>
+
+<style>
+  main {
+    min-height: calc(100vh - 200px);
+    padding: 3rem 0;
+  }
+
+  .post {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .category-badge {
+    display: inline-block;
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .post-header h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    align-items: center;
+  }
+
+  .post-meta time {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .clock-icon {
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+
+  .post-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .post-content p {
+    margin: 1.5rem 0;
+  }
+
+  @media (max-width: 768px) {
+    .post-header h1 {
+      font-size: 2rem;
+    }
+
+    .post-content {
+      font-size: 1rem;
+    }
+  }
+</style>

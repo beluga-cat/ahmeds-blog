@@ -1,0 +1,208 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogCard from '../components/BlogCard.astro';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => 
+  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+---
+
+<BaseLayout title="Home" description="Tech guides and IT solutions by Ahmed">
+  <div class="container">
+      <section class="posts">
+        <h2>Latest Posts</h2>
+        <div class="posts-grid">
+          {sortedPosts.map((post) => (
+            <BlogCard
+              title={post.data.title}
+              pubDate={post.data.pubDate}
+              description={post.data.description}
+              category={post.data.category}
+              slug={post.slug}
+            />
+          ))}
+        </div>
+      </section>
+
+    <section class="certifications">
+      <h2>Certifications</h2>
+      <div class="cert-marquee">
+        <div class="cert-track">
+          <div class="cert-card">
+            <img src="/certifications/az104.png" alt="AZ-104" class="cert-image" />
+            <span class="cert-tag azure">Microsoft</span>
+            <strong>AZ-104</strong>
+            <p>Azure Administrator</p>
+          </div>
+          <div class="cert-card">
+            <img src="/certifications/az700.png" alt="AZ-700" class="cert-image" />
+            <span class="cert-tag azure">Microsoft</span>
+            <strong>AZ-700</strong>
+            <p>Azure Network Engineer</p>
+          </div>
+          <div class="cert-card">
+            <img src="/certifications/vcp-vcf.png" alt="VCP-VCF" class="cert-image" />
+            <span class="cert-tag vmware">VMware</span>
+            <strong>VCP-VCF</strong>
+            <p>VMware Cloud Foundation</p>
+          </div>
+          <div class="cert-card">
+            <img src="/certifications/vmce.png" alt="VMCE" class="cert-image" />
+            <span class="cert-tag veeam">Veeam</span>
+            <strong>VMCE</strong>
+            <p>Veeam Certified Engineer</p>
+          </div>
+          <!-- Duplicates for seamless loop -->
+          <div class="cert-card" aria-hidden="true">
+            <img src="/certifications/az104.png" alt="" class="cert-image" />
+            <span class="cert-tag azure">Microsoft</span>
+            <strong>AZ-104</strong>
+            <p>Azure Administrator</p>
+          </div>
+          <div class="cert-card" aria-hidden="true">
+            <img src="/certifications/az700.png" alt="" class="cert-image" />
+            <span class="cert-tag azure">Microsoft</span>
+            <strong>AZ-700</strong>
+            <p>Azure Network Engineer</p>
+          </div>
+          <div class="cert-card" aria-hidden="true">
+            <img src="/certifications/vcp-vcf.png" alt="" class="cert-image" />
+            <span class="cert-tag vmware">VMware</span>
+            <strong>VCP-VCF</strong>
+            <p>VMware Cloud Foundation</p>
+          </div>
+          <div class="cert-card" aria-hidden="true">
+            <img src="/certifications/vmce.png" alt="" class="cert-image" />
+            <span class="cert-tag veeam">Veeam</span>
+            <strong>VMCE</strong>
+            <p>Veeam Certified Engineer</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .certifications {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .certifications h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+    text-align: center;
+  }
+
+  .cert-marquee {
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    margin: 0 -1.5rem;
+    padding: 1rem 0;
+  }
+
+  .cert-track {
+    display: flex;
+    gap: 1.5rem;
+    width: max-content;
+    animation: marquee 25s linear infinite;
+  }
+
+  .cert-marquee:hover .cert-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .cert-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-width: 220px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .cert-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(255, 107, 53, 0.15);
+  }
+
+  .cert-card .cert-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+  }
+
+  .cert-card strong {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+  }
+
+  .cert-card p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .cert-tag {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .cert-tag.azure {
+    background: linear-gradient(135deg, #00a4ef, #0078d4);
+    color: white;
+  }
+
+  .cert-tag.vmware {
+    background: linear-gradient(135deg, #696566, #3d3d3d);
+    color: white;
+  }
+
+  .cert-tag.veeam {
+    background: linear-gradient(135deg, #00b336, #008026);
+    color: white;
+  }
+
+  .posts h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
