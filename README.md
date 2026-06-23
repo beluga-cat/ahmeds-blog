@@ -53,7 +53,7 @@ The static site will be generated in the `dist/` folder.
 npm run preview
 ```
 
-## Project Structure
+## Structure
 
 ```
 ahmeds-blog/
