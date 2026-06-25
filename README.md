@@ -18,41 +18,6 @@ A tech blog built with Astro featuring guides on backups, virtualization, cloud,
 - **Content**: Markdown with frontmatter
 - **Build**: Static HTML output
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ and npm
-
-### Installation
-
-```bash
-cd ahmeds-blog
-npm install
-```
-
-### Development
-
-```bash
-npm run dev
-```
-
-Open `http://localhost:4321` in your browser.
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-The static site will be generated in the `dist/` folder.
-
-### Preview Production Build
-
-```bash
-npm run preview
-```
-
 ## Structure
 
 ```
@@ -164,9 +129,13 @@ Ahmed - ahmedamin1024@gmail.com
 This is my primary IT lab notebook and portfolio. I'm treating it as a living project: the first release covers Azure, VMware, Veeam, and observability, and I intend to keep expanding it into a full certification and design walkthrough library.
 
 Things I want to add next:
-- Search and tag-based filtering
+- Search and tag‑based filtering
 - Image diagrams and lab screenshots inline
-- Content-related syntax highlighting tuned for YAML/Bicep/PowerShell
+- Content‑related syntax highlighting tuned for YAML/Bicep/PowerShell
 - Maybe a local “lab status” section that reflects what I'm currently studying
 
 If you're reading this and have ideas, feel free to open an issue or PR.
+
+## Test
+
+This is a test line added by Hermes.
