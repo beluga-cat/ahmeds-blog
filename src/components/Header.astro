@@ -7,6 +7,14 @@
       </div>
     </a>
     
+    <button class="mobile-menu-toggle" aria-label="Toggle menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    
     <div class="nav-right">
       <div class="nav-links">
         <a href="/">Home</a>
@@ -50,6 +58,26 @@
     </div>
   </nav>
 </header>
+
+<script>
+  const menuToggle = document.querySelector('.mobile-menu-toggle');
+  const navRight = document.querySelector('.nav-right');
+  
+  menuToggle?.addEventListener('click', () => {
+    navRight?.classList.toggle('mobile-open');
+  });
+  
+  // Handle dropdown toggles on mobile
+  if (window.innerWidth <= 768) {
+    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        const dropdown = toggle.closest('.dropdown');
+        dropdown?.classList.toggle('mobile-active');
+      });
+    });
+  }
+</script>
 
 <style>
   .header {
@@ -180,4 +208,109 @@
     color: var(--accent);
   }
 
+  .mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-menu-toggle {
+      display: flex;
+    }
+
+    .nav-right {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 80%;
+      max-width: 400px;
+      height: 100vh;
+      background-color: var(--bg-secondary);
+      padding: 5rem 2rem 2rem;
+      transition: right 0.3s ease;
+      z-index: 99;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-right.mobile-open {
+      right: 0;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .nav-links > a {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+
+    .dropdown {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dropdown-toggle {
+      width: 100%;
+      justify-content: space-between;
+      padding: 1rem;
+      min-height: 44px;
+    }
+
+    .dropdown-menu {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      display: none;
+      margin-top: 0;
+      border: none;
+      box-shadow: none;
+      background-color: var(--bg-tertiary);
+    }
+
+    .dropdown.mobile-active .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu a {
+      padding: 1rem 1.5rem;
+      min-height: 44px;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+    }
+
+    .logo-subtext {
+      font-size: 0.75rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .nav-right {
+      width: 100%;
+      max-width: none;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+    }
+
+    .logo-subtext {
+      font-size: 0.7rem;
+    }
+  }
 </style>

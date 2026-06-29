@@ -263,14 +263,73 @@ const { postSlug } = Astro.props;
     .comment-form {
       padding: 1.5rem;
     }
+
+    .comment-form h3 {
+      font-size: 1.25rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      padding: 0.875rem;
+      font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    .comment-form button {
+      width: 100%;
+      min-height: 44px;
+      padding: 1rem;
+    }
+
+    .reply-btn {
+      min-height: 44px;
+      min-width: 80px;
+      padding: 0.75rem 1rem;
+    }
+
+    .comment-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .comments-list {
+      padding: 1rem;
+    }
+
+    .comments-list h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .comments-section {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+    }
+
+    .comment-form {
+      padding: 1rem;
+    }
+
+    .comment-reply {
+      margin-left: 0.75rem;
+    }
+
+    .reply-separator.nested {
+      margin-left: 0.75rem;
+    }
+
+    .comment-content {
+      font-size: 0.9375rem;
+    }
   }
 </style>
 
 <script>
   import { createClient } from '@supabase/supabase-js';
   
-  const supabaseUrl = 'https://nseilhimgwbffajuvpxw.supabase.co';
-  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWlsaGltZ3diZmZhanV2cHh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzYyNzgsImV4cCI6MjA5NzgxMjI3OH0.9NqbpLkY0X1OWD8_jdPsI392h3xHuL8Umao-3KnoW3s';
+  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
   
   // Initialize Supabase client
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
