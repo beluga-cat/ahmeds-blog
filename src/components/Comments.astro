@@ -3,11 +3,14 @@ const { postSlug } = Astro.props;
 ---
 
 <section class="comments-section" data-post-slug={postSlug}>
-  <h2>Comments</h2>
-  
   <div class="comments-list" id="comments-list">
-    <p class="loading">Loading comments...</p>
+    <h2>Comments</h2>
+    <div class="comments-content" id="comments-content">
+      <p class="loading">Loading comments...</p>
+    </div>
   </div>
+  
+  <hr class="comments-divider" />
   
   <form class="comment-form" id="comment-form">
     <h3>Leave a Comment</h3>
@@ -34,7 +37,7 @@ const { postSlug } = Astro.props;
   </form>
 </section>
 
-<style>
+<style is:global>
   .comments-section {
     max-width: 800px;
     margin: 4rem auto 0;
@@ -42,9 +45,24 @@ const { postSlug } = Astro.props;
     border-top: 1px solid var(--border);
   }
   
-  .comments-section h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
+  .comments-list {
+    border: none;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background-color: var(--bg-secondary);
+  }
+  
+  .comments-list h2 {
+    font-size: 1.75rem;
+    margin: 0 0 1.5rem 0;
+    color: var(--text-primary);
+  }
+  
+  .comments-divider {
+    border: none;
+    border-top: 2px solid var(--border);
+    margin: 3rem 0;
+    opacity: 0.5;
   }
   
   .loading {
@@ -53,14 +71,30 @@ const { postSlug } = Astro.props;
   }
   
   .comment {
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border);
+    background-color: transparent;
+    border: none;
     border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    padding: 0;
+    margin-bottom: 2rem;
   }
   
   .comment-reply {
+    margin-left: 2rem;
+    padding-left: 0;
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 0 0 0;
+    margin-bottom: 2rem;
+  }
+  
+  .reply-separator {
+    border: none;
+    border-top: 2px solid white;
+    margin: 1.5rem 0;
+  }
+  
+  .reply-separator.nested {
     margin-left: 2rem;
   }
   
@@ -73,37 +107,40 @@ const { postSlug } = Astro.props;
   
   .comment-author {
     font-weight: 600;
-    color: var(--text-primary);
+    color: white;
   }
   
   .comment-date {
-    color: var(--text-secondary);
+    color: white;
     font-size: 0.875rem;
   }
   
   .comment-content {
-    color: var(--text-secondary);
+    color: white;
     line-height: 1.6;
     margin-bottom: 0.75rem;
   }
   
   .comment-actions {
     display: flex;
+    justify-content: flex-end;
     gap: 1rem;
   }
   
   .reply-btn {
-    background: none;
+    background-color: var(--accent);
     border: none;
-    color: var(--accent);
+    color: white;
     cursor: pointer;
     font-size: 0.875rem;
-    padding: 0;
-    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.2s;
   }
   
   .reply-btn:hover {
-    text-decoration: underline;
+    background-color: var(--accent-hover);
   }
   
   .comment-form {
@@ -242,7 +279,7 @@ const { postSlug } = Astro.props;
   const commentsSection = document.querySelector('.comments-section');
   const postSlug = commentsSection?.getAttribute('data-post-slug');
   
-  const commentsList = document.getElementById('comments-list') as HTMLElement;
+  const commentsContent = document.getElementById('comments-content') as HTMLElement;
   const commentForm = document.getElementById('comment-form') as HTMLFormElement;
   const formStatus = document.getElementById('form-status') as HTMLElement;
   const parentIdInput = document.getElementById('parent_id') as HTMLInputElement;
@@ -264,7 +301,7 @@ const { postSlug } = Astro.props;
       allComments = data || [];
       renderComments();
     } catch (error) {
-      commentsList.innerHTML = '<p class="loading">Failed to load comments.</p>';
+      commentsContent.innerHTML = '<p class="loading">Failed to load comments.</p>';
       console.error('Error loading comments:', error);
     }
   }
@@ -282,18 +319,18 @@ const { postSlug } = Astro.props;
   // Render comments
   function renderComments() {
     if (allComments.length === 0) {
-      commentsList.innerHTML = '<p class="loading">No comments yet. Be the first to comment!</p>';
+      commentsContent.innerHTML = '<p class="loading">No comments yet. Be the first to comment!</p>';
       return;
     }
     
     const tree = buildCommentTree(allComments);
-    commentsList.innerHTML = renderCommentTree(tree);
+    commentsContent.innerHTML = renderCommentTree(tree);
     attachReplyHandlers();
   }
   
   // Render comment tree recursively
   function renderCommentTree(comments: any[], depth = 0) {
-    return comments.map((comment: any) => {
+    return comments.map((comment: any, index: number) => {
       const date = new Date(comment.created_at).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -301,6 +338,8 @@ const { postSlug } = Astro.props;
       });
       
       const replyClass = depth > 0 ? 'comment-reply' : '';
+      const showSeparator = index < comments.length - 1;
+      const separatorClass = depth > 0 ? 'reply-separator nested' : 'reply-separator';
       
       return `
         <div class="comment ${replyClass}" data-comment-id="${comment.id}">
@@ -314,6 +353,7 @@ const { postSlug } = Astro.props;
           </div>
           ${comment.replies.length > 0 ? renderCommentTree(comment.replies, depth + 1) : ''}
         </div>
+        ${showSeparator ? `<hr class="${separatorClass}" />` : ''}
       `;
     }).join('');
   }
