@@ -242,10 +242,10 @@ const { postSlug } = Astro.props;
   const commentsSection = document.querySelector('.comments-section');
   const postSlug = commentsSection?.getAttribute('data-post-slug');
   
-  const commentsList = document.getElementById('comments-list');
-  const commentForm = document.getElementById('comment-form');
-  const formStatus = document.getElementById('form-status');
-  const parentIdInput = document.getElementById('parent_id');
+  const commentsList = document.getElementById('comments-list') as HTMLElement;
+  const commentForm = document.getElementById('comment-form') as HTMLFormElement;
+  const formStatus = document.getElementById('form-status') as HTMLElement;
+  const parentIdInput = document.getElementById('parent_id') as HTMLInputElement;
   
   let allComments = [];
   
@@ -270,10 +270,10 @@ const { postSlug } = Astro.props;
   }
   
   // Build comment tree
-  function buildCommentTree(comments, parentId = null) {
+  function buildCommentTree(comments: any[], parentId: string | null = null) {
     return comments
-      .filter(c => c.parent_id === parentId)
-      .map(c => ({
+      .filter((c: any) => c.parent_id === parentId)
+      .map((c: any) => ({
         ...c,
         replies: buildCommentTree(comments, c.id)
       }));
@@ -292,8 +292,8 @@ const { postSlug } = Astro.props;
   }
   
   // Render comment tree recursively
-  function renderCommentTree(comments, depth = 0) {
-    return comments.map(comment => {
+  function renderCommentTree(comments: any[], depth = 0) {
+    return comments.map((comment: any) => {
       const date = new Date(comment.created_at).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -320,10 +320,10 @@ const { postSlug } = Astro.props;
   
   // Attach reply handlers
   function attachReplyHandlers() {
-    document.querySelectorAll('.reply-btn').forEach(btn => {
+    document.querySelectorAll('.reply-btn').forEach((btn: Element) => {
       btn.addEventListener('click', () => {
-        const parentId = btn.dataset.parentId;
-        const parentAuthor = btn.dataset.parentAuthor;
+        const parentId = (btn as HTMLElement).dataset.parentId;
+        const parentAuthor = (btn as HTMLElement).dataset.parentAuthor;
         
         parentIdInput.value = parentId;
         
@@ -352,17 +352,17 @@ const { postSlug } = Astro.props;
   commentForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const submitBtn = commentForm.querySelector('button[type="submit"]');
+    const submitBtn = commentForm.querySelector('button[type="submit"]') as HTMLButtonElement;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting...';
     
     const formData = new FormData(commentForm);
     const comment = {
       post_slug: postSlug,
-      name: formData.get('name').trim(),
-      email: formData.get('email').trim() || null,
-      content: formData.get('content').trim(),
-      parent_id: formData.get('parent_id') || null
+      name: (formData.get('name') as string).trim(),
+      email: (formData.get('email') as string)?.trim() || null,
+      content: (formData.get('content') as string).trim(),
+      parent_id: formData.get('parent_id') as string || null
     };
     
     try {
@@ -394,7 +394,7 @@ const { postSlug } = Astro.props;
   });
   
   // Escape HTML to prevent XSS
-  function escapeHtml(text) {
+  function escapeHtml(text: string) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
