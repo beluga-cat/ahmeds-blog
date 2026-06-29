@@ -1,0 +1,405 @@
+---
+const { postSlug } = Astro.props;
+---
+
+<section class="comments-section" data-post-slug={postSlug}>
+  <h2>Comments</h2>
+  
+  <div class="comments-list" id="comments-list">
+    <p class="loading">Loading comments...</p>
+  </div>
+  
+  <form class="comment-form" id="comment-form">
+    <h3>Leave a Comment</h3>
+    <div class="form-group">
+      <label for="name">Name *</label>
+      <input type="text" id="name" name="name" required />
+    </div>
+    
+    <div class="form-group">
+      <label for="email">Email (optional)</label>
+      <input type="email" id="email" name="email" />
+    </div>
+    
+    <div class="form-group">
+      <label for="content">Comment *</label>
+      <textarea id="content" name="content" rows="5" required></textarea>
+    </div>
+    
+    <input type="hidden" id="parent_id" name="parent_id" value="" />
+    
+    <button type="submit">Submit Comment</button>
+    
+    <div class="form-status" id="form-status"></div>
+  </form>
+</section>
+
+<style>
+  .comments-section {
+    max-width: 800px;
+    margin: 4rem auto 0;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+  }
+  
+  .comments-section h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .loading {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+  
+  .comment {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .comment-reply {
+    margin-left: 2rem;
+  }
+  
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  
+  .comment-author {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  .comment-date {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .comment-content {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+  
+  .comment-actions {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .reply-btn {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding: 0;
+    font-weight: 500;
+  }
+  
+  .reply-btn:hover {
+    text-decoration: underline;
+  }
+  
+  .comment-form {
+    margin-top: 3rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+  }
+  
+  .comment-form h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 1rem;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .comment-form button {
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .comment-form button:hover {
+    background-color: var(--accent-hover);
+  }
+  
+  .comment-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .form-status {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    display: none;
+  }
+  
+  .form-status.success {
+    display: block;
+    background-color: rgba(0, 179, 54, 0.1);
+    border: 1px solid #00b336;
+    color: #00b336;
+  }
+  
+  .form-status.error {
+    display: block;
+    background-color: rgba(255, 107, 53, 0.1);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+  
+  .reply-indicator {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 4px;
+  }
+  
+  .reply-indicator button {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    margin-left: 0.5rem;
+    font-weight: 600;
+  }
+  
+  @media (max-width: 768px) {
+    .comments-section {
+      margin-top: 3rem;
+      padding-top: 2rem;
+    }
+    
+    .comment-reply {
+      margin-left: 1rem;
+    }
+    
+    .comment-form {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  import { createClient } from '@supabase/supabase-js';
+  
+  const supabaseUrl = 'https://nseilhimgwbffajuvpxw.supabase.co';
+  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWlsaGltZ3diZmZhanV2cHh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzYyNzgsImV4cCI6MjA5NzgxMjI3OH0.9NqbpLkY0X1OWD8_jdPsI392h3xHuL8Umao-3KnoW3s';
+  
+  // Initialize Supabase client
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  
+  // Get post slug from DOM
+  const commentsSection = document.querySelector('.comments-section');
+  const postSlug = commentsSection?.getAttribute('data-post-slug');
+  
+  const commentsList = document.getElementById('comments-list');
+  const commentForm = document.getElementById('comment-form');
+  const formStatus = document.getElementById('form-status');
+  const parentIdInput = document.getElementById('parent_id');
+  
+  let allComments = [];
+  
+  // Load comments
+  async function loadComments() {
+    try {
+      const { data, error } = await supabase
+        .from('comments')
+        .select('*')
+        .eq('post_slug', postSlug)
+        .eq('approved', true)
+        .order('created_at', { ascending: true });
+      
+      if (error) throw error;
+      
+      allComments = data || [];
+      renderComments();
+    } catch (error) {
+      commentsList.innerHTML = '<p class="loading">Failed to load comments.</p>';
+      console.error('Error loading comments:', error);
+    }
+  }
+  
+  // Build comment tree
+  function buildCommentTree(comments, parentId = null) {
+    return comments
+      .filter(c => c.parent_id === parentId)
+      .map(c => ({
+        ...c,
+        replies: buildCommentTree(comments, c.id)
+      }));
+  }
+  
+  // Render comments
+  function renderComments() {
+    if (allComments.length === 0) {
+      commentsList.innerHTML = '<p class="loading">No comments yet. Be the first to comment!</p>';
+      return;
+    }
+    
+    const tree = buildCommentTree(allComments);
+    commentsList.innerHTML = renderCommentTree(tree);
+    attachReplyHandlers();
+  }
+  
+  // Render comment tree recursively
+  function renderCommentTree(comments, depth = 0) {
+    return comments.map(comment => {
+      const date = new Date(comment.created_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      const replyClass = depth > 0 ? 'comment-reply' : '';
+      
+      return `
+        <div class="comment ${replyClass}" data-comment-id="${comment.id}">
+          <div class="comment-header">
+            <span class="comment-author">${escapeHtml(comment.name)}</span>
+            <span class="comment-date">${date}</span>
+          </div>
+          <div class="comment-content">${escapeHtml(comment.content)}</div>
+          <div class="comment-actions">
+            <button class="reply-btn" data-parent-id="${comment.id}" data-parent-author="${escapeHtml(comment.name)}">Reply</button>
+          </div>
+          ${comment.replies.length > 0 ? renderCommentTree(comment.replies, depth + 1) : ''}
+        </div>
+      `;
+    }).join('');
+  }
+  
+  // Attach reply handlers
+  function attachReplyHandlers() {
+    document.querySelectorAll('.reply-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const parentId = btn.dataset.parentId;
+        const parentAuthor = btn.dataset.parentAuthor;
+        
+        parentIdInput.value = parentId;
+        
+        // Add reply indicator
+        let indicator = document.querySelector('.reply-indicator');
+        if (!indicator) {
+          indicator = document.createElement('div');
+          indicator.className = 'reply-indicator';
+          commentForm.insertBefore(indicator, commentForm.firstChild.nextSibling);
+        }
+        
+        indicator.innerHTML = `Replying to <strong>${parentAuthor}</strong> <button type="button">Cancel</button>`;
+        indicator.querySelector('button').addEventListener('click', () => {
+          parentIdInput.value = '';
+          indicator.remove();
+        });
+        
+        // Scroll to form
+        commentForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('content').focus();
+      });
+    });
+  }
+  
+  // Submit comment
+  commentForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const submitBtn = commentForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+    
+    const formData = new FormData(commentForm);
+    const comment = {
+      post_slug: postSlug,
+      name: formData.get('name').trim(),
+      email: formData.get('email').trim() || null,
+      content: formData.get('content').trim(),
+      parent_id: formData.get('parent_id') || null
+    };
+    
+    try {
+      const { error } = await supabase
+        .from('comments')
+        .insert([comment]);
+      
+      if (error) throw error;
+      
+      formStatus.className = 'form-status success';
+      formStatus.textContent = 'Comment submitted! It will appear after moderation.';
+      
+      commentForm.reset();
+      parentIdInput.value = '';
+      
+      const indicator = document.querySelector('.reply-indicator');
+      if (indicator) indicator.remove();
+      
+      // Reload comments after a short delay
+      setTimeout(loadComments, 1000);
+    } catch (error) {
+      formStatus.className = 'form-status error';
+      formStatus.textContent = 'Failed to submit comment. Please try again.';
+      console.error('Error submitting comment:', error);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Comment';
+    }
+  });
+  
+  // Escape HTML to prevent XSS
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  // Initial load
+  loadComments();
+</script>

@@ -1,8 +1,9 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Comments from '../components/Comments.astro';
 
-const { title, description, pubDate, category, author, formattedDate } = Astro.props;
+const { title, description, pubDate, category, author, formattedDate, slug } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -35,6 +36,8 @@ const { title, description, pubDate, category, author, formattedDate } = Astro.p
       <div class="post-content">
         <slot />
       </div>
+      
+      <Comments postSlug={slug} />
     </article>
   </main>
   <Footer />

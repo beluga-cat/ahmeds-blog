@@ -27,6 +27,7 @@ const formattedDate = new Date(post.data.pubDate).toLocaleDateString('en-US', {
   category={post.data.category}
   author={post.data.author}
   formattedDate={formattedDate}
+  slug={post.slug}
 >
   <Content />
 </BlogPostLayout>
