@@ -135,7 +135,3 @@ Things I want to add next:
 - Maybe a local “lab status” section that reflects what I'm currently studying
 
 If you're reading this and have ideas, feel free to open an issue or PR.
-
-## Test
-
-This is a test line added by Hermes.
